@@ -8,7 +8,6 @@ function App() {
     <section>
     <h1 style={{display:"flex" , justifyContent:"center" , margin:"auto" , color:"white" }}>Three js Journey</h1>
     <div className="App">
-  
       <div className="linkList">
       <Link to="/FirstDemo" target="_blank"> First 3D cube</Link>
         <Link to="/Second" target="_blank"> First Hover cube</Link>
@@ -44,11 +43,12 @@ function App() {
         <Link to="/Testmicro" target="_blank"> Particles pattern first</Link>
         <Link to="/Testmicro2" target="_blank"> Particles waves customise</Link> 
         <Link to="/TestSqauremixcro" target="_blank"> Particles cube pattern </Link>
-        <Link to="/Universe" target="_blank">Static galaxy</Link>
+      </div>
+  
+      <div className="linkList">
+     <Link to="/Universe" target="_blank">Static galaxy</Link>
         <Link to="/Che" target="_blank">Raycasting</Link>
         <Link to="/Pattern" target="_blank">Galaxy starter</Link>
-      </div>
-      <div className="linkList">
        <Link to="/Astronut" target="_blank"> Cursor and modal</Link>
         <Link to="/Astromouse" target="_blank"> Astro animation plus cursor</Link>
         <Link to="/MindSpacerocket" target="_blank">4 modals</Link>
@@ -62,12 +62,6 @@ function App() {
         <Link to="/Thanos" target="_blank">Thanos waves</Link>
         <Link to="/FollowGame" target="_blank">Game (temple run)</Link>
         <Link to="/Fpsgame" target="_blank"> Fps game clone (learning) </Link>
-        <Link to="/Playground" target="_blank">FPS Playground</Link>
-        <Link to="/Spline" target="_blank"> Spline Demo</Link>
-        <Link to="/Imagehover" target="_blank"> Matrix shaders</Link>
-        <Link to="/TestingShader" target="_blank"> Water shader</Link>
-        <Link to="/Thememind" target="_blank">Scroll demo</Link>
-        <Link to="/TestingBg" target="_blank"> Testing Bg</Link>
       </div>
       <div className="linkList">
         <Link to="/Awwward" target="_blank">Portfolio 3d</Link>
@@ -80,6 +74,12 @@ function App() {
         <Link to="/ModifiedMaterial" target="_blank"> Modified Material</Link>
         <Link to="/Scene" target="_blank"> Glitch scene</Link>
         <Link to="/Smoke" target="_blank"> Smoke cursor</Link>
+   <Link to="/Playground" target="_blank">FPS Playground</Link>
+        <Link to="/Spline" target="_blank"> Spline Demo</Link>
+        <Link to="/Imagehover" target="_blank"> Matrix shaders</Link>
+        <Link to="/TestingShader" target="_blank"> Water shader</Link>
+        <Link to="/Thememind" target="_blank">Scroll demo</Link>
+        <Link to="/TestingBg" target="_blank"> Testing Bg</Link>
       </div>
     </div>
   </section>
