@@ -5,6 +5,8 @@ import "./App.css";
 function App() {
   return (
     <div className="App">
+
+    <h1 style={{display:"flex" , justifyContent:"center" , margin:"auto" }}>Three js Journey</h1>
       <div className="linkList">
       <Link to="/FirstDemo" target="_blank"> First 3D cube</Link>
         <Link to="/Second" target="_blank"> First Hover cube</Link>
