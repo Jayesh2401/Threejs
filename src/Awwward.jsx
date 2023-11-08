@@ -426,7 +426,7 @@ function Awwward() {
           <section className="firstPage">
             <div className="firstWrapper">
               <div className="leftSideText">
-                <h1>300 Minds</h1>
+                <h1>Jayesh Aherwal</h1>
                 <p>Designers | 3D artist</p>
               </div>
 
