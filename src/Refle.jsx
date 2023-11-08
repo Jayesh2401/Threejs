@@ -109,7 +109,7 @@ import { Reflector } from "three/examples/jsm/objects/Reflector";
 function Refle() {
   const mirrorRef = useRef(null);
   const canvasRef = useRef(null);
-  const { RGBFormat } = THREE;
+  // const { RGBFormat } = THREE;
 
   useEffect(() => {
     // Three.js setup
@@ -175,7 +175,7 @@ function Refle() {
     const renderTarget = new THREE.WebGLRenderTarget(
       window.innerWidth,
       window.innerHeight,
-      { format: RGBFormat }
+      // { format: RGBFormat }
     );
 
     // Render loop
