@@ -6,32 +6,22 @@ function App() {
   return (
     <div className="App">
       <div className="linkList">
-        <Link to="/FirstDemo"> FirstDemo</Link>
-        <Link to="/Second"> Second</Link>
-        <Link to="/Testone"> Testone</Link>
-        <Link to="/Third"> Third</Link>
-        <Link to="/Fourth"> Fourth</Link>
-        <Link to="/SmileyEmoji"> SmileyEmoji</Link>
-        <Link to="/Fifth"> Fifth</Link>
-        <Link to="/Sixth"> Sixth</Link>
-        <Link to="/Seventh"> Seventh</Link>
-        <Link to="/SunEarth"> SunEarth</Link>
-        <Link to="/Eight"> Eight</Link>
-        <Link to="/IronManHelmet"> IronManHelmet</Link>
-        <Link to="/GLTFLoaderDemo"> GLTFLoaderDemo</Link>
-        <Link to="/Tenth"> Tenth</Link>
-        <Link to="/ThreeScene"> ThreeScene</Link>
-        <Link to="/Eleventh"> Eleventh</Link>
-        <Link to="/River"> River</Link>
-        <Link to="/WaterS"> WaterS</Link>
-        <Link to="/House"> House</Link>
-        <Link to="/Soldier"> Soldier</Link>
-        <Link to="/Skeleton"> Skeleton</Link>
-        <Link to="/Cube"> Cube</Link>
-        <Link to="/NavbarCube"> NavbarCube</Link>
-        <Link to="/ChangeSide"> ChangeSide</Link>
-        <Link to="/Mind"> Mind</Link>
-        <Link to="/Refle"> Refle</Link>
+      <Link to="/FirstDemo" target="_blank"> First 3D cube</Link>
+        <Link to="/Second" target="_blank"> First Hover cube</Link>
+        <Link to="/Fourth" target="_blank"> Fourth</Link>
+        <Link to="/SmileyEmoji" target="_blank"> Smiley-Emoji</Link>
+        <Link to="/Sixth" target="_blank"> First 3D phoenix bird </Link>
+        <Link to="/Seventh" target="_blank"> Shadow and animation</Link>
+        <Link to="/SunEarth" target="_blank"> Solar system</Link>
+        <Link to="/GLTFLoaderDemo" target="_blank">GLTFLoaderDemo first animation</Link>
+        <Link to="/Tenth" target="_blank"> Geometry Scenary</Link>
+        <Link to="/Eleventh" target="_blank">Wooden floor & robot</Link>
+        <Link to="/River" target="_blank">River Scene classic</Link>
+        <Link to="/House" target="_blank"> House</Link>
+        <Link to="/Soldier" target="_blank"> Soldier</Link>
+        <Link to="/Skeleton" target="_blank"> Skeleton Learning</Link>
+        <Link to="/Mind" target="_blank"> Room demo</Link>
+        <Link to="/Refle" target="_blank"> Reflection shadow</Link>
       </div>
       <div className="linkList">
         <Link to="/Mirror"> Mirror</Link>
