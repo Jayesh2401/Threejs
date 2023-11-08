@@ -45,32 +45,25 @@ function App() {
         <Link to="/Pattern" target="_blank">Galaxy starter</Link>
       </div>
       <div className="linkList">
-        <Link to="/Astronut"> Astronut</Link>
-        <Link to="/Astro"> Astro</Link>
-        <Link to="/Astromouse"> Astromouse</Link>
-        <Link to="/MindSpacerocket"> MindSpacerocket</Link>
-        <Link to="/PhsSound"> PhsSound</Link>
-        <Link to="/CannonStart"> CannonStart</Link>
-        <Link to="/PhsJump"> PhsJump</Link>
-        <Link to="/PhsAir"> PhsAir</Link>
-        <Link to="/Phsbal"> Phsbal</Link>
-        <Link to="/Gltfmodal"> Gltfmodal</Link>
-        <Link to="/Bg"> Bg</Link>
-        <Link to="/Hologram"> Hologram</Link>
-        <Link to="/Moving"> Moving</Link>
-        <Link to="/Thanos"> Thanos</Link>
-        <Link to="/ThanosSmall"> ThanosSmall</Link>
-        <Link to="/FollowGame"> FollowGame</Link>
-        <Link to="/Presentation"> Presentation</Link>
-        <Link to="/Fpsgame"> Fpsgame</Link>
-        <Link to="/Playground"> Playground</Link>
-        <Link to="/Spline"> Spline</Link>
-        <Link to="/Imagehover"> Imagehover</Link>
-        <Link to="/TestingShader"> TestingShader</Link>
-        <Link to="/Branding"> Branding</Link>
-        <Link to="/Branding2"> Branding2</Link>
-        <Link to="/Thememind"> Thememind</Link>
-        <Link to="/TestingBg"> TestingBg</Link>
+       <Link to="/Astronut" target="_blank"> Cursor and modal</Link>
+        <Link to="/Astromouse" target="_blank"> Astro animation plus cursor</Link>
+        <Link to="/MindSpacerocket" target="_blank">4 modals</Link>
+        <Link to="/PhsSound" target="_blank"> Physics plus sound</Link>
+        <Link to="/PhsJump" target="_blank"> Physics Jump</Link>
+        <Link to="/PhsAir" target="_blank"> Physics Air</Link>
+        <Link to="/Gltfmodal" target="_blank">Draco and gltf</Link>
+        <Link to="/Bg" target="_blank">3d-text animated</Link>
+        <Link to="/Hologram" target="_blank">Hologram</Link>
+        <Link to="/Moving" target="_blank"> Moving circuit</Link>
+        <Link to="/Thanos" target="_blank">Thanos waves</Link>
+        <Link to="/FollowGame" target="_blank">Game (temple run)</Link>
+        <Link to="/Fpsgame" target="_blank"> Fps game clone (learning) </Link>
+        <Link to="/Playground" target="_blank">FPS Playground</Link>
+        <Link to="/Spline" target="_blank"> Spline Demo</Link>
+        <Link to="/Imagehover" target="_blank"> Matrix shaders</Link>
+        <Link to="/TestingShader" target="_blank"> Water shader</Link>
+        <Link to="/Thememind" target="_blank">Scroll demo</Link>
+        <Link to="/TestingBg" target="_blank"> Testing Bg</Link>
       </div>
       <div className="linkList">
         <Link to="/Awwward"> Awwward</Link>
