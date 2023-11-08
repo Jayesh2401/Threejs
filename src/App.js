@@ -66,25 +66,16 @@ function App() {
         <Link to="/TestingBg" target="_blank"> Testing Bg</Link>
       </div>
       <div className="linkList">
-        <Link to="/Awwward"> Awwward</Link>
-        <Link to="/Demo"> Demo</Link>
-        <Link to="/Shaderdemo"> Shaderdemo</Link>
-        <Link to="/Wave"> Wave</Link>
-        <Link to="/ARDemo"> ARDemo</Link>
-        <Link to="/Experiment"> Experiment</Link>
-        <Link to="/AniStar"> AniStar</Link>
-        <Link to="/Cursor"> Cursor</Link>
-        <Link to="/AnimatedSpiral"> AnimatedSpiral</Link>
-        <Link to="/ModifiedMaterial"> ModifiedMaterial</Link>
-        <Link to="/Scene"> Scene</Link>
-        <Link to="/CheckBox"> CheckBox</Link>
-        <Link to="/Test"> Test</Link>
-        <Link to="/Test2"> Test2</Link>
-        <Link to="/Layers"> Layers</Link>
-        <Link to="/SwingingSVG"> SwingingSVG</Link>
-        <Link to="/Smoke"> Smoke</Link>
-        <Link to="/WaveDiv"> WaveDiv</Link>
-        <Link to="/Animate"> Animate</Link>
+        <Link to="/Awwward" target="_blank">Portfolio 3d</Link>
+        <Link to="/Shaderdemo" target="_blank"> Shader bg</Link>
+        <Link to="/Wave" target="_blank"> Waves shader+three</Link>
+        <Link to="/Experiment" target="_blank">Shader Rangoli</Link>
+        <Link to="/AniStar" target="_blank"> Shader Star falling</Link>
+        <Link to="/Cursor" target="_blank">Dream cursor</Link>
+        <Link to="/AnimatedSpiral" target="_blank"> Animated Spiral</Link>
+        <Link to="/ModifiedMaterial" target="_blank"> Modified Material</Link>
+        <Link to="/Scene" target="_blank"> Glitch scene</Link>
+        <Link to="/Smoke" target="_blank"> Smoke cursor</Link>
       </div>
     </div>
   );
