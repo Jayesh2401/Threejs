@@ -24,32 +24,25 @@ function App() {
         <Link to="/Refle" target="_blank"> Reflection shadow</Link>
       </div>
       <div className="linkList">
-        <Link to="/Mirror"> Mirror</Link>
-        <Link to="/Trialodffloor"> Trialodffloor</Link>
-        <Link to="/Raycc"> Raycc</Link>
-        <Link to="/Check"> Check</Link>
-        <Link to="/Physics"> Physics</Link>
-        <Link to="/Trial"> Trial</Link>
-        <Link to="/LearningPhysic"> LearningPhysic</Link>
-        <Link to="/SqauareGame"> SqauareGame</Link>
-        <Link to="/PathFollow"> PathFollow</Link>
-        <Link to="/Pathglb"> Pathglb</Link>
-        <Link to="/Followdot"> Followdot</Link>
-        <Link to="/Glbphysi"> Glbphysi</Link>
-        <Link to="/Rft"> Rft</Link>
-        <Link to="/Circle"> Circle</Link>
-        <Link to="/Circleroom"> Circleroom</Link>
-        <Link to="/Collison"> Collison</Link>
-        <Link to="/Ironman"> Ironman</Link>
-        <Link to="/Ortho"> Ortho</Link>
-        <Link to="/TwoCubes"> TwoCubes</Link>
-        <Link to="/Testmicro"> Testmicro</Link>
-        <Link to="/Testmicro2"> Testmicro2</Link>
-        <Link to="/TestSqauremixcro"> TestSqauremixcro</Link>
-        <Link to="/Universe"> Universe</Link>
-        <Link to="/Che"> Che</Link>
-        <Link to="/Pattern"> Pattern</Link>
-        <Link to="/Port"> Port</Link>
+        <Link to="/Mirror" target="_blank">Showcase room</Link>
+        <Link to="/Check" target="_blank"> Water demo</Link>
+        <Link to="/Physics" target="_blank"> First Physics </Link>
+        <Link to="/LearningPhysic" target="_blank"> Learning Physics layout</Link>
+        <Link to="/SqauareGame" target="_blank">Sqauare Game demo</Link>
+        <Link to="/PathFollow" target="_blank"> PathFollow demo</Link>
+        <Link to="/Pathglb" target="_blank"> Path glb plus Physic speed </Link>
+        <Link to="/Followdot" target="_blank"> Follow dot</Link>
+        <Link to="/Glbphysi" target="_blank"> Glb physics learning</Link>
+        <Link to="/Rft" target="_blank">React fiber clone (learning)</Link>
+        <Link to="/Circle" target="_blank"> Circle physics</Link>
+        <Link to="/Circleroom" target="_blank">Circleroom + play</Link>
+        <Link to="/Ironman" target="_blank"> Heavy Glb testing Ironman</Link>
+        <Link to="/Testmicro" target="_blank"> Particles pattern first</Link>
+        <Link to="/Testmicro2" target="_blank"> Particles waves customise</Link> 
+        <Link to="/TestSqauremixcro" target="_blank"> Particles cube pattern </Link>
+        <Link to="/Universe" target="_blank">Static galaxy</Link>
+        <Link to="/Che" target="_blank">Raycasting</Link>
+        <Link to="/Pattern" target="_blank">Galaxy starter</Link>
       </div>
       <div className="linkList">
         <Link to="/Astronut"> Astronut</Link>
