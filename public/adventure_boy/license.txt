@@ -1,0 +1,11 @@
+Model Information:
+* title:	Adventure Boy
+* source:	https://sketchfab.com/3d-models/adventure-boy-f4853f2c60a84b9c911b2fafb607c7c2
+* author:	T.Quang.Huy (https://sketchfab.com/huytieuhuy)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Adventure Boy" (https://sketchfab.com/3d-models/adventure-boy-f4853f2c60a84b9c911b2fafb607c7c2) by T.Quang.Huy (https://sketchfab.com/huytieuhuy) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

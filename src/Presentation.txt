@@ -1,0 +1,180 @@
+import React, { useEffect, useRef, useState } from "react";
+import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+
+function Presentation() {
+  const canvasRef = useRef(null);
+  let clock = new THREE.Clock();
+  let flag, rock;
+  useEffect(() => {
+    const scene = new THREE.Scene();
+    // scene.background = new THREE.Color("grey");
+
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      100
+    );
+    camera.position.z = 3;
+    // camera.position.y = 1;
+    scene.add(camera);
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas: canvasRef.current,
+      antialias: true,
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const textureLoader = new THREE.TextureLoader();
+    const matcapTexture = textureLoader.load("mat13.jpg");
+    const matcapTextures = textureLoader.load("try2.jpg");
+    const thickbeemTexture = textureLoader.load("9.png");
+    const thickbeemTextures = textureLoader.load("try1.jpg");
+
+    const parameters = {
+      count: 1000,
+      size: 0.1,
+    };
+    let geometry = null;
+    let material = null;
+    let points = null;
+    let positions;
+
+    const genarateGalxy = () => {
+      if (points !== null) {
+        geometry.dispose();
+        material.dispose();
+        scene.remove(points);
+      }
+
+      geometry = new THREE.BufferGeometry();
+      positions = new Float32Array(parameters.count * 3);
+
+      for (let i = 0; i < parameters.count; i++) {
+        const i3 = i * 3;
+
+        positions[i3 + 0] = -(Math.random() - 0.5) * 10;
+        positions[i3 + 1] = (Math.random() - 0.5) * 7;
+        positions[i3 + 2] = -(Math.random() - 0.5) * 12;
+      }
+      geometry.setAttribute(
+        "position",
+        new THREE.BufferAttribute(positions, 3)
+      );
+
+      material = new THREE.PointsMaterial({
+        size: parameters.size,
+        sizeAttenuation: true,
+        alphaMap: thickbeemTextures,
+        transparent: true,
+        color: "#9435df",
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        //   blending: THREE.CustomBlending,
+      });
+
+      points = new THREE.Points(geometry, material);
+      scene.add(points);
+    };
+    genarateGalxy();
+
+    const directionalLight = new THREE.DirectionalLight("white", 5);
+    directionalLight.position.set(0, 1, 2);
+    // scene.add(directionalLight);
+
+    const helper = new THREE.DirectionalLightHelper(directionalLight, 0.1);
+    // scene.add(helper);
+
+    const ambientLight = new THREE.AmbientLight("#fff", 1);
+    scene.add(ambientLight);
+
+    const capsule = new THREE.Mesh(
+      new THREE.CapsuleGeometry(0.03, 2, 4, 8),
+      new THREE.MeshBasicMaterial({ map: matcapTextures })
+    );
+    capsule.position.set(-0.6, -0.2, 0.1);
+    scene.add(capsule);
+
+    const loader = new GLTFLoader();
+    loader.load("stylized_glowing_rock.glb", (gltf) => {
+      rock = gltf.scene;
+      rock.position.y = -2.2;
+      rock.position.x = -0.6;
+      rock.scale.set(1.4, 1.4, 1.4);
+      scene.add(gltf.scene);
+    });
+
+    const clothWidth = 1;
+    const clothHeight = 0.5;
+    const clothSegmentsX = 10;
+    const clothSegmentsY = 10;
+
+    const clothGeometry = new THREE.PlaneGeometry(
+      clothWidth,
+      clothHeight,
+      clothSegmentsX,
+      clothSegmentsY
+    );
+    const clothMaterial = new THREE.MeshBasicMaterial({
+      color: "red",
+      side: THREE.DoubleSide,
+    });
+    const clothMesh = new THREE.Mesh(clothGeometry, clothMaterial);
+    clothMesh.position.set(-0.1, 0.6, 0);
+    scene.add(clothMesh);
+
+    const animate = () => {
+      const delta = clock.getDelta();
+      const t = clock.getElapsedTime();
+      if (rock) {
+        rock.rotation.y = 0.05 * t;
+      }
+
+      const time = Date.now() * 0.0005;
+
+      const verticesAttribute = clothMesh.geometry.getAttribute("position");
+      const vertices = verticesAttribute.array;
+      const numVertices = vertices.length / 3;
+
+      for (let i = 0; i < numVertices; i++) {
+        const vertexIndex = i * 3;
+        const x = vertices[vertexIndex];
+        const y = vertices[vertexIndex + 1];
+        // const z = Math.sin(x * 1.65 + time) * Math.cos(y * 1 + time);
+        // const multi = (x + 2.5) / 5;
+        // const curveFactor = Math.sin((x + 2.5) * 4) * 0.5;
+        // vertices[vertexIndex + 2] = z;
+
+        const z = Math.sin(x * 2 + time) * Math.cos(y * 3 + time);
+        const curveFactor = Math.sin((x + 0.5) * 1) * 0.3;
+    
+        // Check if the vertex is on the left edges or corner
+        if (x <= -0.48) {
+          vertices[vertexIndex + 2] = 0.05; // Make it sticky, no motion
+        } else {
+          vertices[vertexIndex + 2] = z + curveFactor; // Add motion and curve
+        }
+      }
+      verticesAttribute.needsUpdate = true;
+
+      points.rotateY(0.001);
+
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    };
+    requestAnimationFrame(animate);
+    const handleResize = () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return <canvas ref={canvasRef}></canvas>;
+}
+
+export default Presentation;

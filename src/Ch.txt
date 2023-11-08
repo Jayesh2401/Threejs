@@ -1,0 +1,305 @@
+import * as THREE from 'three';
+import { Canvas, useFrame, useThree } from 'react-three-fiber';
+import { Physics, usePlane, useSphere } from 'cannon';
+import { EffectComposer, SSAO, Bloom } from 'react-postprocessing';
+
+export default function Ch() {
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 17, 40);
+  camera.position.set(0, 0, 20);
+
+  const fog = new THREE.Fog('red', 25, 35);
+  scene.fog = fog;
+
+  const gl = new THREE.WebGLRenderer({ stencil: false, antialias: false });
+  const canvas = gl.domElement;
+  canvas.style.display = 'block';
+  document.body.appendChild(canvas);
+
+  const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+  scene.add(ambientLight);
+
+  const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.5);
+  directionalLight1.position.set(-10, -10, -5);
+  scene.add(directionalLight1);
+
+  const directionalLight2 = new THREE.DirectionalLight(0xffffff, 1);
+  directionalLight2.position.set(50, 50, 25);
+  directionalLight2.castShadow = true;
+  directionalLight2.shadow.mapSize = new THREE.Vector2(256, 256);
+  directionalLight2.shadow.camera.left = -10;
+  directionalLight2.shadow.camera.right = 10;
+  directionalLight2.shadow.camera.top = 10;
+  directionalLight2.shadow.camera.bottom = -10;
+  scene.add(directionalLight2);
+
+  const physics = new Physics({ gravity: [0, -50, 0], defaultContactMaterial: { restitution: 0.5 } });
+
+  const group = new THREE.Group();
+  group.position.set(0, 0, -10);
+  scene.add(group);
+
+  const instancedSpheres = new InstancedSpheres();
+  group.add(instancedSpheres);
+
+  const effectComposer = new EffectComposer();
+  const ssao = new SSAO({ radius: 0.4, intensity: 1, luminanceInfluence: 0.4, color: 'red' });
+  const bloom = new Bloom({ intensity: 0.25, kernelSize: 1, luminanceThreshold: 0.5, luminanceSmoothing: 0.0 });
+  effectComposer.addPass(ssao);
+  effectComposer.addPass(bloom);
+
+  useFrame(() => {
+    // Update camera position based on mouse
+    const { viewport } = useThree();
+    const [, api] = useSphere(() => ({ type: 'Kinematic', args: [6] }));
+    api.position.set((state.mouse.x * viewport.width) / 2, (state.mouse.y * viewport.height) / 2, 7);
+  });
+
+  return null;
+}
+
+function InstancedSpheres({ count = 100 }) {
+  const { viewport } = useThree();
+  const geometry = new THREE.SphereBufferGeometry(1.2, 32, 32);
+  const material = new THREE.MeshLambertMaterial({ color: '#ff7b00' });
+  const instancedMesh = new THREE.InstancedMesh(geometry, material, count);
+  const ref = new THREE.Object3D();
+
+  for (let i = 0; i < count; i++) {
+    const sphere = new THREE.Mesh(geometry, material);
+    sphere.position.set(4 - Math.random() * 8, 4 - Math.random() * 8, Math.random() * 20);
+    sphere.scale.setScalar(0.5 + Math.random() * 0.5);
+    ref.position.copy(sphere.position);
+    ref.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+    ref.updateMatrix();
+    instancedMesh.setMatrixAt(i, ref.matrix);
+  }
+
+  useFrame(({ clock }) => {
+    // Update instanced mesh rotation
+    instancedMesh.rotation.y = clock.getElapsedTime() * 0.1;
+  });
+
+  return (
+    <group>
+      <primitive object={instancedMesh} />
+    </group>
+  );
+}
+
+
+
+
+
+
+import React, { useRef, useEffect } from "react";
+import * as THREE from "three";
+import * as CANNON from "cannon-es";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import CannonDebugger from "cannon-es-debugger";
+
+function Circleroom() {
+  const circleRef = useRef(null);
+  let circleBody, sphere;
+  let sphereBodies = [];
+  useEffect(() => {
+    const canvas = circleRef.current;
+    const screen = {
+      width: window.innerWidth,
+      height: window.innerHeight,
+    };
+    const renderer = new THREE.WebGL1Renderer({
+      canvas,
+      antialias: false,
+      stencil: false,
+    });
+    renderer.setSize(screen.width, screen.height);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(
+      35,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      400
+    );
+    camera.position.set(0, 12, 100);
+    const controls = new OrbitControls(camera, canvas);
+    controls.enableDamping = true;
+    controls.minPolarAngle = Math.PI / 2.5;
+    controls.maxPolarAngle = Math.PI / 2.3;
+    const ambientLight = new THREE.AmbientLight("white", 1.5);
+    scene.add(ambientLight);
+
+    const directionalLight1 = new THREE.DirectionalLight("purple", 0.5);
+    directionalLight1.position.set(-10, -10, -5);
+    scene.add(directionalLight1);
+
+    const directionalLight2 = new THREE.DirectionalLight("purple", 1);
+    directionalLight2.position.set(50, 50, 25);
+    directionalLight2.castShadow = true;
+    directionalLight2.shadow.mapSize = new THREE.Vector2(256, 256);
+    directionalLight2.shadow.camera.left = -10;
+    directionalLight2.shadow.camera.right = 10;
+    directionalLight2.shadow.camera.top = 10;
+    directionalLight2.shadow.camera.bottom = -10;
+    scene.add(directionalLight2);
+
+    const textureLoader = new THREE.TextureLoader();
+    const texture = textureLoader.load("aa.jpg");
+    texture.minFilter = THREE.LinearFilter;
+    const materials = new THREE.MeshStandardMaterial({
+      map: texture,
+      color: "grey",
+      side: THREE.DoubleSide,
+    });
+
+    materials.roughness = 1;
+
+    const cubeSize = 25;
+    const cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+    const cubeMaterial = new THREE.MeshStandardMaterial({
+      color: "grey",
+      side: THREE.BackSide, // show the backside of the cube
+    });
+    const cubeRoom = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    cubeRoom.position.y = 12.5;
+    scene.add(cubeRoom);
+
+    let planeGeometry = new THREE.PlaneGeometry(25, 25);
+    const planeFlorr = new THREE.Mesh(planeGeometry, materials);
+    planeFlorr.rotation.x = -Math.PI * 0.5;
+    planeFlorr.position.y = 0.01;
+    scene.add(planeFlorr);
+
+
+    const physicsWorld = new CANNON.World({
+      gravity: new CANNON.Vec3(0, -9.82, 0),
+    });
+
+    const groundBody = new CANNON.Body({
+      type: CANNON.Body.STATIC,
+      mass: 0,
+      shape: new CANNON.Plane(),
+    });
+    groundBody.position.y = 0.01;
+    groundBody.quaternion.setFromAxisAngle(
+      new CANNON.Vec3(-1, 0, 0),
+      Math.PI * 0.5
+    );
+    physicsWorld.addBody(groundBody);
+
+    let count = 100;
+    const sphereRadius = 0.5;
+    const sphereMass = 1;
+
+    for (let i = 0; i < 100; i++) {
+      const sphereGeometry = new THREE.SphereGeometry(sphereRadius, 32, 32);
+      const sphereMaterial = new THREE.MeshLambertMaterial({ color: "purple" });
+      const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+      scene.add(sphereMesh);
+
+      const sphereBody = new CANNON.Body({
+        mass: sphereMass,
+        shape: new CANNON.Sphere(sphereRadius),
+        material: sphereMaterial,
+      });
+      sphereBody.position.set(
+        Math.random() * 10 - 5,
+        10 + i * 1,
+        Math.random() * 10 - 5
+      );
+      physicsWorld.addBody(sphereBody);
+      sphereBodies.push(sphereBody);
+    }
+
+    const updateSphereMeshes = () => {
+      for (let i = 0; i < sphereBodies.length; i++) {
+        const sphereMesh = scene.children[i + 5];
+        const sphereBody = sphereBodies[i];
+        sphereMesh.position.copy(sphereBody.position);
+        sphereMesh.quaternion.copy(sphereBody.quaternion);
+      }
+    };
+
+    const wallSize = 25;
+    const wallBody1 = new CANNON.Body({
+      mass: 100,
+    });
+    wallBody1.position.set(-wallSize / 2, wallSize / 2, 0);
+    wallBody1.quaternion.setFromAxisAngle(
+      new CANNON.Vec3(0, -1, 0),
+      Math.PI * 0.5
+    );
+    physicsWorld.addBody(wallBody1);
+
+    // const wallBody2 = new CANNON.Body({
+    //   type: CANNON.Body.STATIC,
+    //   mass: 0,
+    //   shape: new CANNON.Plane(),
+    // });
+    // wallBody2.position.set(0, 0, -wallSize / 2);
+    // wallBody2.quaternion.setFromAxisAngle(
+    //   new CANNON.Vec3(0, 0, 0),
+    //   Math.PI * 0.5
+    // );
+    // physicsWorld.addBody(wallBody2);
+    // const wallBody3 = new CANNON.Body({
+    //   type: CANNON.Body.STATIC,
+    //   mass: 0,
+    //   shape: new CANNON.Plane(),
+    // });
+    // wallBody3.position.set(wallSize / 2, 0, 0);
+    // wallBody3.quaternion.setFromAxisAngle(
+    //   new CANNON.Vec3(0, -1, 0),
+    //   Math.PI * 0.5
+    // );
+    // physicsWorld.addBody(wallBody3);
+
+    // const wallBody4 = new CANNON.Body({
+    //   type: CANNON.Body.STATIC,
+    //   mass: 0,
+    //   shape: new CANNON.Plane(),
+    // });
+    // wallBody4.position.set(0, 0, wallSize / 2);
+    // physicsWorld.addBody(wallBody4);
+
+    const geometry = new THREE.SphereGeometry(0.5, 32, 32);
+    const material = new THREE.MeshLambertMaterial({ color: "purple" });
+    const instancedMeshs = new THREE.Mesh(geometry, material);
+    scene.add(instancedMeshs);
+    const circleBodys = new CANNON.Body({
+      mass: 10,
+    });
+    circleBodys.addShape(new CANNON.Sphere(0.5));
+    circleBodys.position.set(2, 5, 0);
+    physicsWorld.addBody(circleBodys);
+
+    const updateBoxMesh = () => {
+      instancedMeshs.position.copy(circleBodys.position);
+      instancedMeshs.quaternion.copy(circleBodys.quaternion);
+    };
+
+    const cannonDebugger = new CannonDebugger(scene, physicsWorld, {
+      color: "lightblue",
+    });
+
+    function render() {
+      physicsWorld.step(1 / 60);
+      cannonDebugger.update();
+      updateSphereMeshes();
+      //   sphereBodies.forEach((sphereBody, index) => {
+      //     const sphereMesh = sphereMeshes[index];
+      //     sphereMesh.position.copy(sphereBody.position);
+      //     sphereMesh.quaternion.copy(sphereBody.quaternion);
+      //   });
+      controls.update();
+      updateBoxMesh();
+      renderer.render(scene, camera);
+      requestAnimationFrame(render);
+    }
+    requestAnimationFrame(render);
+  }, []);
+
+  return <canvas ref={circleRef}></canvas>;
+}
+
+export default Circleroom;

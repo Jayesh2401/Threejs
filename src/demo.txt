@@ -1,0 +1,455 @@
+import React, { useEffect, useRef } from "react";
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import {FlakesTexture} from '/js/FlakesTexture';
+
+function Sixth() {
+  const canvasRef = useRef(null);
+  let clock = new THREE.Clock();
+
+  useEffect(() => {
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color("grey");
+
+    const camera = new THREE.PerspectiveCamera(
+      90,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+    const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current });
+    renderer.setSize(window.innerWidth - 15, window.innerHeight);
+
+    const loader = new GLTFLoader();
+    let mixer = null;
+
+    loader.load(
+      "phoenix_bird.glb",
+      (gltf) => {
+        const animations = gltf.animations;
+        if (animations && animations.length) {
+          mixer = new THREE.AnimationMixer(gltf.scene);
+          const animationAction = mixer.clipAction(animations[0]);
+          animationAction.setLoop(THREE.LoopRepeat);
+          animationAction.play();
+          mixer.timeScale = 0.9;
+        }
+        scene.add(gltf.scene);
+
+        const box = new THREE.Box3().setFromObject(gltf.scene);
+        const center = new THREE.Vector3();
+        box.getCenter(center);
+        camera.position.set(center.x + 200, center.y, -box.max.z - 200);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.target.set(center.x, center.y, center.z);
+        controls.update();
+      },
+      undefined,
+      (error) => {
+        console.error(error);
+      }
+    );
+
+    const ambientLight = new THREE.AmbientLight("#fff", 0.5);
+    scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight("white", 0.5);
+    directionalLight.position.set(10, 10, 10);
+    scene.add(directionalLight);
+
+    const animate = () => {
+      requestAnimationFrame(animate);
+      const delta = clock.getDelta();
+      if (mixer) {
+        mixer.update(delta);
+      }
+      renderer.render(scene, camera);
+    };
+    animate();
+
+    const handleResize = () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return <canvas ref={canvasRef} />;
+}
+
+export default Sixth;
+
+
+// import React, { useRef, useEffect } from "react";
+// import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+// import * as THREE from "three";
+// import * as dat from "dat.gui";
+
+// function Seventh() {
+//   const canvasRef = useRef(null);
+
+//   useEffect(() => {
+//     const canvas = canvasRef.current;
+//     const renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
+//     renderer.setSize(window.innerWidth - 15, window.innerHeight);
+
+//     const fov = 75;
+//     const aspect = window.innerWidth / window.innerHeight;
+//     const near = 0.1;
+//     const far = 500;
+//     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+//     camera.position.z = 3;
+
+//     const scene = new THREE.Scene();
+
+//     const color = 0xffffff;
+//     const intensity = 2;
+//     const light = new THREE.DirectionalLight(color, intensity);
+//     light.position.set(-1, -2, 4);
+//     scene.add(light);
+//     const helper = new THREE.DirectionalLightHelper(light, 0.1);
+//     scene.add(helper);
+
+//     // Create the GUI
+//     const gui = new dat.GUI();
+
+//     // Add a folder for the light properties
+//     const lightFolder = gui.addFolder("Light");
+//     lightFolder.open();
+
+//     // Add controls for the light position
+//     const lightPosition = {
+//       x: light.position.x,
+//       y: light.position.y,
+//       z: light.position.z,
+//     };
+//     lightFolder
+//       .add(lightPosition, "x", -10, 10)
+//       .step(0.1)
+//       .onChange(() => {
+//         light.position.x = lightPosition.x;
+//       });
+//     lightFolder
+//       .add(lightPosition, "y", -10, 10)
+//       .step(0.1)
+//       .onChange(() => {
+//         light.position.y = lightPosition.y;
+//       });
+//     lightFolder
+//       .add(lightPosition, "z", -10, 10)
+//       .step(0.1)
+//       .onChange(() => {
+//         light.position.z = lightPosition.z;
+//       });
+
+//       const floorSize = 100;
+//       const floorGeometry = new THREE.PlaneGeometry(floorSize, floorSize);
+//       const floorMaterial = new THREE.MeshBasicMaterial({ color: "blue" });
+//       const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+//       floor.rotation.x = -Math.PI / 2; // rotate the floor to lie flat
+//       scene.add(floor);
+
+//     const boxWidth = 1;
+//     const boxHeight = 1;
+//     const boxDepth = 1;
+//     const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
+//     const material = new THREE.MeshPhongMaterial({ color: "grey" });
+//     const center = new THREE.Vector3();
+
+//     const cube = new THREE.Mesh(geometry, material);
+//     scene.add(cube);
+//     const controls = new OrbitControls(camera, renderer.domElement);
+//     controls.target.set(center.x, center.y, center.z);
+//     controls.update();
+//     function render(time) {
+//       time *= 0.001;
+
+//       cube.rotation.z = time;
+//       cube.rotation.y = time;
+
+//       renderer.render(scene, camera);
+
+//       requestAnimationFrame(render);
+//     }
+//     requestAnimationFrame(render);
+//   }, []);
+
+//   return <canvas ref={canvasRef} />;
+// }
+
+// export default Seventh;
+
+import React, { useRef, useEffect } from "react";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import * as THREE from "three";
+import * as dat from "dat.gui";
+
+function Seventh() {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
+    renderer.shadowMap.enabled = true;
+    renderer.setSize(window.innerWidth - 15, window.innerHeight);
+
+    const fov = 75;
+    const aspect = window.innerWidth / window.innerHeight;
+    const near = 0.1;
+    const far = 500;
+    const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    camera.position.z = 3;
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color("skyblue");
+
+    const color = 0xffffff;
+    const intensity = 2;
+    const light = new THREE.DirectionalLight(color, intensity);
+    // light.position.set(-1, -2, 4);
+    light.position.set(2, 2, 0);
+    light.castShadow = true;
+    light.shadow.camera.near = 0.5;
+    light.shadow.camera.far = 50;
+    light.shadow.camera.left = -20;
+    light.shadow.camera.right = 20;
+    light.shadow.camera.top = 20;
+    light.shadow.camera.bottom = -20;
+    light.shadow.mapSize.width = 1024;
+    light.shadow.mapSize.height = 1024;
+    light.shadow.bias = -0.001;
+
+    scene.add(light);
+    const helper = new THREE.DirectionalLightHelper(light, 0.4);
+    scene.add(helper);
+
+    // Create the GUI
+    const gui = new dat.GUI();
+
+    // Add a folder for the light properties
+    const lightFolder = gui.addFolder("Light");
+    lightFolder.open();
+
+    // Add controls for the light position
+    const lightPosition = {
+      x: light.position.x,
+      y: light.position.y,
+      z: light.position.z,
+    };
+    lightFolder
+      .add(lightPosition, "x", -10, 10)
+      .step(0.1)
+      .onChange(() => {
+        light.position.x = lightPosition.x;
+      });
+    lightFolder
+      .add(lightPosition, "y", -10, 10)
+      .step(0.1)
+      .onChange(() => {
+        light.position.y = lightPosition.y;
+      });
+    lightFolder
+      .add(lightPosition, "z", -10, 10)
+      .step(0.1)
+      .onChange(() => {
+        light.position.z = lightPosition.z;
+      });
+
+    const floorFolder = gui.addFolder("Floor");
+    floorFolder.open();
+
+    // const floorSize = 70;
+    const floorSize = { width: 11, height: 11 };
+    floorFolder
+      .add(floorSize, "width", 1, 200)
+      .step(1)
+      .onChange(() => {
+        planeGeometry.dispose();
+        planeGeometry = new THREE.PlaneGeometry(
+          floorSize.width,
+          floorSize.height
+        );
+        planeMesh.geometry = planeGeometry;
+      });
+    floorFolder
+      .add(floorSize, "height", 1, 200)
+      .step(1)
+      .onChange(() => {
+        planeGeometry.dispose();
+        planeGeometry = new THREE.PlaneGeometry(
+          floorSize.width,
+          floorSize.height
+        );
+        planeMesh.geometry = planeGeometry;
+      });
+
+    const floorPosition = { x: 0, y: -1, z: 0 };
+    floorFolder
+      .add(floorPosition, "x", -10, 10)
+      .step(0.1)
+      .onChange(() => {
+        planeMesh.position.x = floorPosition.x;
+      });
+    floorFolder
+      .add(floorPosition, "y", -10, 10)
+      .step(0.1)
+      .onChange(() => {
+        planeMesh.position.y = floorPosition.y;
+      });
+    floorFolder
+      .add(floorPosition, "z", -10, 10)
+      .step(0.1)
+      .onChange(() => {
+        planeMesh.position.z = floorPosition.z;
+      });
+
+    const floorRotation = { x: 0, y: 0, z: 0 };
+    floorFolder
+      .add(floorRotation, "x", -Math.PI, Math.PI)
+      .step(0.01)
+      .onChange(() => {
+        planeMesh.rotation.x = floorRotation.x;
+      });
+    floorFolder
+      .add(floorRotation, "y", -Math.PI, Math.PI)
+      .step(0.01)
+      .onChange(() => {
+        planeMesh.rotation.y = floorRotation.y;
+      });
+    floorFolder
+      .add(floorRotation, "z", -Math.PI, Math.PI)
+      .step(0.01)
+      .onChange(() => {
+        planeMesh.rotation.z = floorRotation.z;
+      });
+
+    // const planeGeometry = new THREE.PlaneGeometry(
+    //   floorSize.width,
+    //   floorSize.height
+    // );
+    // const planeMaterial = new THREE.MeshPhongMaterial({
+    //   color: 0xffffff,
+    //   side: THREE.DoubleSide,
+    // });
+    // const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+    // planeMesh.receiveShadow = true;
+    // planeMesh.position.y = -1;
+    // planeMesh.rotation.x = -Math.PI / 2;
+    // scene.add(planeMesh);
+    let planeGeometry = new THREE.PlaneGeometry(
+      floorSize.width,
+      floorSize.height
+    );
+    const planeMaterial = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      roughness: 0.9,
+    });
+    const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+    planeMesh.receiveShadow = true;
+    planeMesh.position.y = -1;
+    planeMesh.receiveShadow = true;
+    planeMesh.rotation.x = -Math.PI / 2;
+    scene.add(planeMesh);
+
+    // const floorGeometry = new THREE.PlaneGeometry(floorSize - 20, floorSize);
+    // const floorMaterial = new THREE.MeshBasicMaterial({ color: "white" });
+    // const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    // floor.rotation.x = -Math.PI / 2; // rotate the floor to lie flat
+    // scene.add(floor);
+
+    const boxWidth = 1;
+    const boxHeight = 1;
+    const boxDepth = 1;
+    const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
+    const material = new THREE.MeshPhongMaterial({ color: "black" });
+    const center = new THREE.Vector3();
+
+    const cube = new THREE.Mesh(geometry, material);
+    cube.castShadow = true;
+    cube.position.y = 0.2; // position the cube on top of the platform
+    scene.add(cube);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.target.set(center.x, center.y, center.z);
+    controls.update();
+
+    function render(time) {
+      time *= 0.001;
+
+      cube.rotation.x = time;
+      //   cube.rotation.y = time;
+
+      renderer.render(scene, camera);
+
+      requestAnimationFrame(render);
+    }
+    requestAnimationFrame(render);
+  }, []);
+
+  return <canvas ref={canvasRef} />;
+}
+export default Seventh;
+
+
+import { useRef } from "react";
+import logo from "./logo.svg";
+import "./Style/Style.scss";
+import "./App.css";
+import Header from "./Components/DemoHeader";
+import Demo from "./Components/Demo";
+import NewReactHedaer from "./Components/NewReactHedaer";
+import Tabbing from "./Components/Tabbing";
+import Tab3 from "./Components/Tab3";
+import Box from "./pages/Box";
+import Pricing from "./pages/Pricing";
+import Slider from "./pages/Slider";
+import Footer from "./pages/Footer";
+
+function App() {
+  const appRef = useRef(null); // create a ref to the main app container
+
+  // add an event listener to the main app container to handle smooth scroll behavior
+  const handleScroll = (event) => {
+    event.preventDefault();
+    const container = appRef.current;
+    const scrollStep = 10;
+    const delta = Math.max(-1, Math.min(1, event.wheelDelta || -event.detail));
+    container.scrollTo({
+      top: container.scrollTop + delta * scrollStep,
+      behavior: "smooth",
+    });
+  };
+
+
+  import { useEffect } from "react";
+import logo from "./logo.svg";
+import "./Style/Style.scss";
+import "./App.css";
+import Header from "./Components/DemoHeader";
+import Demo from "./Components/Demo";
+import NewReactHedaer from "./Components/NewReactHedaer";
+import Tabbing from "./Components/Tabbing";
+import Tab3 from "./Components/Tab3";
+import Box from "./pages/Box";
+import Pricing from "./pages/Pricing";
+import Slider from "./pages/Slider";
+import Footer from "./pages/Footer";
+
+function App() {
+
+  useEffect(() => {
+    const container = document.querySelector('.App'); // replace .App with your parent element class or ID
+    let scrollAccumulator = 0;
+    let scrollSpeed = 0;
+    let prevTimestamp = null;
+
+    const smoothScroll = (timestamp) => {
+      if (!prevTimestamp) prevTimestamp = timestamp;
+      const deltaTime = timestamp - prevTimestamp;
+      prevTimestamp = timestamp;
+
+      const smoothDelta = Math.min(1, deltaTime / 16.67); 
